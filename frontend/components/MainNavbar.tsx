@@ -125,8 +125,8 @@ export default function MainNavbar() {
             </nav>
           </div>
 
-          {/* Desktop Wallet Section (Hidden on smaller desktop screens to force row 2) */}
-          <div className="hidden xl:flex items-center gap-4">
+          {/* Desktop Wallet Section (Hidden on screens smaller than 2xl to prevent overlap) */}
+          <div className="hidden 2xl:flex items-center gap-4">
             {!ready ? (
               <div className="flex items-center gap-2 px-4 py-2 bg-brand-purple neo-brutalism">
                 <Loader2 className="h-4 w-4 animate-spin text-white" />
@@ -178,49 +178,59 @@ export default function MainNavbar() {
           </div>
         </div>
 
-        {/* Row 2: Status Bar (Visible on lg to xl screens only, or when authenticated) */}
-        {ready && authenticated && address && (
-          <div className="xl:hidden flex justify-end pb-4 items-center gap-3">
-            {balance !== null && (
-              <div className="flex items-center px-3 py-1.5 bg-brand-yellow neo-brutalism-sm">
-                <span className="text-[10px] font-display font-black text-black">
-                  {Number(balance).toFixed(3)} MON
-                </span>
-              </div>
-            )}
-            <button
-              onClick={copyAddress}
-              className="flex items-center gap-2 px-3 py-1.5 bg-brand-skyblue neo-brutalism-sm group"
-            >
-              <span className="text-[10px] font-display font-black text-black">
-                {shortAddress}
-              </span>
-              {copied ? (
-                <Check className="h-3 w-3 text-black" />
-              ) : (
-                <Copy className="h-3 w-3 text-black opacity-50 group-hover:opacity-100" />
-              )}
-            </button>
-            <button
-              onClick={handleLogout}
-              className="p-1.5 bg-brand-coral border-2 border-black neo-brutalism-sm hover:bg-red-500 transition-colors"
-            >
-              <LogOut className="h-4 w-4 text-black" />
-            </button>
-          </div>
-        )}
+        {/* Row 2: Status Bar (Visible on all screens smaller than 2xl) */}
+        <div className="2xl:hidden border-t-2 border-black/20 pt-2 pb-4">
+          <div className="flex justify-between items-center px-2">
+            <div className="text-[10px] font-display font-bold text-white/40 uppercase tracking-widest">
+              MONAD TESTNET CORE
+            </div>
 
-        {/* Connect Button for lg to xl screens when NOT authenticated */}
-        {ready && !authenticated && (
-          <div className="xl:hidden flex justify-end pb-4">
-            <button
-              onClick={login}
-              className="px-4 py-1.5 bg-brand-lime text-black font-display font-black text-[10px] neo-brutalism-sm uppercase"
-            >
-              Connect Wallet
-            </button>
+            <div className="flex items-center gap-3">
+              {ready && authenticated && address ? (
+                <>
+                  {balance !== null && (
+                    <div className="flex items-center px-3 py-1 bg-brand-yellow border-2 border-black neo-brutalism-sm">
+                      <span className="text-[10px] font-black text-black">
+                        {Number(balance).toFixed(3)} MON
+                      </span>
+                    </div>
+                  )}
+                  <button
+                    onClick={copyAddress}
+                    className="flex items-center gap-2 px-3 py-1 bg-brand-skyblue border-2 border-black neo-brutalism-sm group"
+                  >
+                    <span className="text-[10px] font-black text-black">
+                      {shortAddress}
+                    </span>
+                    {copied ? (
+                      <Check className="h-3 w-3 text-black" />
+                    ) : (
+                      <Copy className="h-3 w-3 text-black opacity-50 h-3 w-3" />
+                    )}
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="p-1 px-2 bg-brand-coral border-2 border-black neo-brutalism-sm hover:bg-red-500 transition-colors"
+                  >
+                    <LogOut className="h-3 w-3 text-black" />
+                  </button>
+                </>
+              ) : ready && !authenticated ? (
+                <button
+                  onClick={login}
+                  className="px-4 py-1.5 bg-brand-lime text-black font-black text-[10px] border-2 border-black neo-brutalism-sm uppercase hover:bg-white transition-all"
+                >
+                  Connect Wallet
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 px-3 py-1 bg-brand-purple border-2 border-black neo-brutalism-sm">
+                  <Loader2 className="h-3 w-3 animate-spin text-white" />
+                  <span className="text-[10px] font-black text-white">SYNCING</span>
+                </div>
+              )}
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Mobile bottom navigation */}
