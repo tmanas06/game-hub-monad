@@ -80,6 +80,7 @@ export default function MainNavbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0B] border-b-4 border-black shadow-[0_4px_0_0_rgba(0,0,0,1)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Row 1: Logo and Main Nav */}
         <div className="flex justify-between h-20 items-center">
           {/* Logo Section */}
           <div className="flex items-center gap-8">
@@ -111,7 +112,7 @@ export default function MainNavbar() {
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      'px-4 py-1.5 rounded-sm text-sm font-display font-bold uppercase transition-all border-2 border-transparent hover:border-black hover:bg-white hover:text-black neo-brutalism-sm',
+                      'px-4 py-1.5 rounded-sm text-sm font-display font-bold uppercase transition-all border-2 border-transparent hover:border-black hover:bg-white hover:text-black neo-brutalism-sm whitespace-nowrap',
                       isActive
                         ? 'bg-white text-black border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)]'
                         : 'text-white hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)]'
@@ -124,8 +125,8 @@ export default function MainNavbar() {
             </nav>
           </div>
 
-          {/* Wallet Section */}
-          <div className="flex items-center gap-4">
+          {/* Desktop Wallet Section (Hidden on smaller desktop screens to force row 2) */}
+          <div className="hidden xl:flex items-center gap-4">
             {!ready ? (
               <div className="flex items-center gap-2 px-4 py-2 bg-brand-purple neo-brutalism">
                 <Loader2 className="h-4 w-4 animate-spin text-white" />
@@ -135,7 +136,7 @@ export default function MainNavbar() {
               <div className="flex items-center gap-3">
                 {/* Balance Display */}
                 {balance !== null && (
-                  <div className="hidden sm:flex items-center px-3 py-1.5 bg-brand-yellow neo-brutalism">
+                  <div className="flex items-center px-3 py-1.5 bg-brand-yellow neo-brutalism">
                     <span className="text-xs font-display font-black text-black">
                       {Number(balance).toFixed(3)} MON
                     </span>
@@ -176,6 +177,50 @@ export default function MainNavbar() {
             )}
           </div>
         </div>
+
+        {/* Row 2: Status Bar (Visible on lg to xl screens only, or when authenticated) */}
+        {ready && authenticated && address && (
+          <div className="xl:hidden flex justify-end pb-4 items-center gap-3">
+            {balance !== null && (
+              <div className="flex items-center px-3 py-1.5 bg-brand-yellow neo-brutalism-sm">
+                <span className="text-[10px] font-display font-black text-black">
+                  {Number(balance).toFixed(3)} MON
+                </span>
+              </div>
+            )}
+            <button
+              onClick={copyAddress}
+              className="flex items-center gap-2 px-3 py-1.5 bg-brand-skyblue neo-brutalism-sm group"
+            >
+              <span className="text-[10px] font-display font-black text-black">
+                {shortAddress}
+              </span>
+              {copied ? (
+                <Check className="h-3 w-3 text-black" />
+              ) : (
+                <Copy className="h-3 w-3 text-black opacity-50 group-hover:opacity-100" />
+              )}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="p-1.5 bg-brand-coral border-2 border-black neo-brutalism-sm hover:bg-red-500 transition-colors"
+            >
+              <LogOut className="h-4 w-4 text-black" />
+            </button>
+          </div>
+        )}
+
+        {/* Connect Button for lg to xl screens when NOT authenticated */}
+        {ready && !authenticated && (
+          <div className="xl:hidden flex justify-end pb-4">
+            <button
+              onClick={login}
+              className="px-4 py-1.5 bg-brand-lime text-black font-display font-black text-[10px] neo-brutalism-sm uppercase"
+            >
+              Connect Wallet
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Mobile bottom navigation */}
