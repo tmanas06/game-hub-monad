@@ -2,9 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Wallet, Receipt, RefreshCw, ShieldCheck } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
 type Payment = {
   game: string;
@@ -58,201 +55,209 @@ export default function AgentDashboardPage() {
     loadStats();
   }, []);
 
-  // Keep the dashboard dynamic by polling for updates
   useEffect(() => {
     const interval = setInterval(() => {
       loadStats();
     }, 10_000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const formatAmount = (value: number, currency: string) =>
     `${value.toFixed(2)} ${currency}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-slate-950 to-indigo-950 pt-24 pb-10 px-4 flex justify-center">
-      <div className="w-full max-w-4xl space-y-6">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">
-              Agent Dashboard
+    <div className="min-h-screen bg-[#0A0A0B] text-white pt-24 pb-12 px-4 overflow-x-hidden relative font-body">
+      {/* Background Graphic Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20">
+        <div className="absolute top-20 left-10 w-96 h-96 bg-brand-lime/10 rounded-full blur-[100px] animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-coral/10 rounded-full blur-[100px] animate-pulse"></div>
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="animate-fadeIn">
+            <h1 className="text-6xl md:text-7xl font-display font-black mb-4 uppercase italic tracking-tighter italic">
+              AGENT <span className="text-brand-coral">CONTROL</span>
             </h1>
-            <p className="mt-2 text-sm md:text-base text-gray-300">
-              Monitor your gasless gaming payments and auto-pay allowance in real time.
-            </p>
-            {error ? (
-              <p className="mt-2 text-sm text-red-300">
-                {error}
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="h-1 w-12 bg-brand-lime neo-brutalism-sm"></div>
+              <p className="text-xl font-display font-black uppercase italic tracking-tight text-white/70">
+                Gasless monitoring / Real-time automation
               </p>
-            ) : lastUpdatedLabel ? (
-              <p className="mt-2 text-xs text-gray-400">
-                Last updated: {lastUpdatedLabel}
-              </p>
-            ) : null}
-          </div>
-          <Badge
-            variant="outline"
-            className="border-emerald-400/60 text-emerald-300 bg-emerald-500/10 flex items-center gap-1"
-          >
-            <ShieldCheck className="h-4 w-4" />
-            Auto-pay enabled
-          </Badge>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          <Card className="bg-gray-900/70 border-blue-500/40">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-300">
-                Agent Balance
-              </CardTitle>
-              <Wallet className="h-4 w-4 text-blue-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-200">
-                {stats
-                  ? formatAmount(stats.balance, stats.currency)
-                  : isLoading
-                  ? "Loading..."
-                  : "--"}
+              <div className="px-4 py-1 bg-brand-lime text-black font-display font-black text-xs uppercase neo-brutalism-sm flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4" />
+                AUTO-PAY ACTIVE
               </div>
-              <p className="text-xs text-gray-400 mt-1">
-                Funds available to sponsor player gas fees.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900/70 border-purple-500/40">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-300">
-                Today&apos;s Spend
-              </CardTitle>
-              <Receipt className="h-4 w-4 text-purple-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-purple-200">
-                {stats
-                  ? formatAmount(stats.todaysSpend, stats.currency)
-                  : isLoading
-                  ? "Loading..."
-                  : "--"}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                Total sponsored gas for players in the last 24 hours.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900/70 border-emerald-500/40">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-300">
-                Auto-pay Limit
-              </CardTitle>
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-emerald-200">
-                {stats
-                  ? formatAmount(stats.dailyLimit, stats.currency)
-                  : isLoading
-                  ? "Loading..."
-                  : "--"}
-              </div>
-              <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                Auto-pay up to{" "}
-                {stats
-                  ? formatAmount(stats.dailyLimit, stats.currency)
-                  : "0.10 USDC"}
-                /day
-                <CheckCircle2 className="h-3 w-3 text-emerald-400" />
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="bg-gray-950/80 border-gray-800">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <div>
-              <CardTitle className="text-base md:text-lg text-gray-100">
-                Payment History
-              </CardTitle>
-              <p className="text-xs text-gray-400 mt-1">
-                Latest gasless payments made on behalf of your players.
-              </p>
             </div>
-            <button
-              onClick={loadStats}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-md border border-gray-700 px-3 py-1.5 text-xs font-medium text-gray-200 hover:bg-gray-800 transition-colors",
-                isRefreshing && "opacity-70 cursor-wait"
-              )}
-              disabled={isRefreshing}
-            >
-              <RefreshCw
-                className={cn(
-                  "h-3.5 w-3.5",
-                  isRefreshing && "animate-spin text-blue-400"
-                )}
-              />
-              Refresh
-            </button>
-          </CardHeader>
-          <CardContent>
-            {isLoading && !stats ? (
-              <p className="text-sm text-gray-400">Loading payments...</p>
-            ) : !stats || stats.payments.length === 0 ? (
-              <p className="text-sm text-gray-400">
-                No payments recorded yet. Once players start using the arcade, you&apos;ll
-                see their sponsored transactions here.
+            {error && (
+              <p className="mt-4 text-brand-coral font-display font-black uppercase italic animate-pulse">
+                CRITICAL ERROR: {error}
               </p>
+            )}
+            {lastUpdatedLabel && !error && (
+              <p className="mt-4 text-[10px] font-black uppercase tracking-widest text-white/40">
+                SYSTEM LAST SYNCED: <span className="text-brand-yellow">{lastUpdatedLabel}</span>
+              </p>
+            )}
+          </div>
+
+          <button
+            onClick={loadStats}
+            className={cn(
+              "p-5 bg-white text-black font-display font-black uppercase text-xl neo-brutalism hover:bg-brand-lime transition-all active:translate-y-1 flex items-center gap-3",
+              isRefreshing && "opacity-70 cursor-wait bg-brand-yellow"
+            )}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={cn("h-6 w-6", isRefreshing && "animate-spin")} />
+            <span>{isRefreshing ? "SYNCING..." : "RELOAD ENGINE"}</span>
+          </button>
+        </div>
+
+        {/* Status Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-brand-purple p-8 neo-brutalism rotate-[-1deg] text-black group hover:bg-white transition-colors">
+            <div className="flex justify-between items-start mb-6">
+              <div className="p-3 bg-black text-white neo-brutalism-sm">
+                <Wallet className="h-6 w-6" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-60">BALANCE</span>
+            </div>
+            <div className="text-4xl font-display font-black mb-2 uppercase italic tracking-tighter">
+              {stats ? formatAmount(stats.balance, stats.currency) : (isLoading ? "LOADING..." : "--")}
+            </div>
+            <p className="text-xs font-bold uppercase tracking-tight leading-tight opacity-70">
+              AVAILABLE GAS SPONSORSHIP FUNDS
+            </p>
+          </div>
+
+          <div className="bg-brand-yellow p-8 neo-brutalism rotate-[1deg] text-black group hover:bg-white transition-colors">
+            <div className="flex justify-between items-start mb-6">
+              <div className="p-3 bg-black text-white neo-brutalism-sm">
+                <Receipt className="h-6 w-6" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-60">SPEND (24H)</span>
+            </div>
+            <div className="text-4xl font-display font-black mb-2 uppercase italic tracking-tighter">
+              {stats ? formatAmount(stats.todaysSpend, stats.currency) : (isLoading ? "LOADING..." : "--")}
+            </div>
+            <p className="text-xs font-bold uppercase tracking-tight leading-tight opacity-70">
+              TOTAL SPONSORED GAS TRANSACTIONS
+            </p>
+          </div>
+
+          <div className="bg-brand-lime p-8 neo-brutalism rotate-[-1deg] text-black group hover:bg-white transition-colors">
+            <div className="flex justify-between items-start mb-6">
+              <div className="p-3 bg-black text-white neo-brutalism-sm">
+                <CheckCircle2 className="h-6 w-6" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-60">DAILY CEILING</span>
+            </div>
+            <div className="text-4xl font-display font-black mb-2 uppercase italic tracking-tighter">
+              {stats ? formatAmount(stats.dailyLimit, stats.currency) : (isLoading ? "LOADING..." : "--")}
+            </div>
+            <p className="text-xs font-bold uppercase tracking-tight leading-tight opacity-70">
+              MAXIMUM AUTOMATED DAILY ALLOWANCE
+            </p>
+          </div>
+        </div>
+
+        {/* History Table - Neo Brutalist List */}
+        <div className="bg-black p-0 neo-brutalism overflow-hidden border-4 border-black mb-16 shadow-[20px_20px_0_0_rgba(255,255,255,0.05)]">
+          <div className="bg-white p-6 border-b-4 border-black flex justify-between items-center">
+            <div>
+              <h2 className="text-3xl font-display font-black text-black uppercase italic tracking-tighter">
+                PAYMENT <span className="text-brand-coral">LOGS</span>
+              </h2>
+              <p className="text-xs font-black uppercase tracking-widest text-black/50 mt-1">Real-time settlement data</p>
+            </div>
+            <div className="px-4 py-2 bg-black text-brand-lime font-display font-black text-xs uppercase neo-brutalism-xs">
+              LIVE STREAM
+            </div>
+          </div>
+
+          <div className="bg-[#121214] p-4 space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar">
+            {isLoading && !stats ? (
+              <div className="flex flex-col items-center py-20 gap-4">
+                <RefreshCw className="w-12 h-12 animate-spin text-brand-lime" />
+                <span className="font-display font-black uppercase tracking-widest text-white/40">Initializing Records...</span>
+              </div>
+            ) : !stats || stats.payments.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="font-display font-black text-2xl uppercase italic text-white/60">NO TRANSACTIONS DETECTED</p>
+                <p className="font-body font-bold text-white/30 uppercase mt-2">Waiting for player activity...</p>
+              </div>
             ) : (
-              <div className="space-y-2 text-sm">
-                {stats.payments.map((payment, idx) => (
-                  <div
-                    key={`${payment.game}-${idx}`}
-                    className="flex items-center justify-between rounded-md border border-gray-800 bg-gray-900/60 px-3 py-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-gray-100">
-                        {payment.game}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {formatAmount(payment.amount, payment.currency)}
+              stats.payments.map((payment, idx) => (
+                <div
+                  key={`${payment.game}-${idx}`}
+                  className="flex items-center justify-between p-4 border-2 border-white/5 bg-white/5 hover:bg-brand-coral hover:text-black transition-all group neo-brutalism-xs"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-black flex items-center justify-center neo-brutalism-sm-black transition-transform group-hover:rotate-6">
+                      <span className="font-display font-black text-brand-yellow text-xl">
+                        {payment.game[0]}
                       </span>
                     </div>
-                    <div
-                      className={cn(
-                        "flex items-center gap-1",
-                        payment.status === "success"
-                          ? "text-emerald-400"
-                          : payment.status === "pending"
-                          ? "text-yellow-300"
-                          : "text-red-300"
-                      )}
-                    >
-                      <span className="text-xs">
-                        {payment.status === "success"
-                          ? "✓"
-                          : payment.status === "pending"
-                          ? "…"
-                          : "×"}
-                      </span>
-                      <span className="text-xs">
-                        {payment.status === "success"
-                          ? "Success"
-                          : payment.status === "pending"
-                          ? "Pending"
-                          : "Failed"}
-                      </span>
+                    <div>
+                      <div className="font-display font-black text-lg uppercase tracking-tight group-hover:text-black">
+                        {payment.game}
+                      </div>
+                      <div className="text-[10px] font-black uppercase tracking-widest opacity-50 group-hover:opacity-100 italic">
+                        SETTLED: {formatAmount(payment.amount, payment.currency)}
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
+
+                  <div className={cn(
+                    "flex items-center gap-2 px-4 py-2 neo-brutalism-sm font-display font-black text-xs uppercase transition-colors",
+                    payment.status === "success" ? "bg-brand-lime text-black" :
+                      payment.status === "pending" ? "bg-brand-yellow text-black" :
+                        "bg-brand-coral text-white"
+                  )}>
+                    {payment.status === "success" ? "VERIFIED" :
+                      payment.status === "pending" ? "PROCESSING" : "FAILED"}
+                  </div>
+                </div>
+              ))
             )}
-          </CardContent>
-        </Card>
+          </div>
+
+          <div className="bg-brand-coral p-4 border-t-4 border-black text-black text-center">
+            <p className="font-display font-black uppercase italic tracking-tight text-sm">
+              🛡️ All transactions are audited by the Sentinad AI Node for security and compliance.
+            </p>
+          </div>
+        </div>
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #000;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #333;
+          border-radius: 0;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #444;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.8s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
 
+function cn(...inputs: any[]) {
+  return inputs.filter(Boolean).join(" ");
+}

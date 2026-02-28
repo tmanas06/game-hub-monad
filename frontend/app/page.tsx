@@ -1,162 +1,124 @@
 "use client"
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Gamepad2, Trophy, Zap, Star, Bot, Sparkles, Coins } from "lucide-react";
+import { Gamepad2, Trophy, Zap, Bot, Coins, ArrowRight, Star } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-indigo-950 via-purple-950 to-gray-950 text-white pt-20 pb-10 px-4 overflow-auto relative">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      </div>
+    <div className="min-h-screen bg-[#0A0A0B] text-white pt-28 pb-20 px-4 overflow-x-hidden relative">
+      {/* Background Graphic Elements */}
+      <div className="absolute top-40 -left-20 w-80 h-80 bg-brand-purple/20 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-40 -right-20 w-80 h-80 bg-brand-lime/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-      {/* Floating particles effect */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-purple-400/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${3 + Math.random() * 4}s infinite ease-in-out`,
-              animationDelay: `${Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Hero Section */}
-        <div className="text-center mb-16 relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <h1 className="text-7xl md:text-8xl font-black opacity-5 blur-sm select-none">
-              GAME HUB MONAD
+        <div className="flex flex-col lg:flex-row items-center gap-12 mb-24">
+          <div className="flex-1 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-lime neo-brutalism-sm mb-6 rotate-[-1deg]">
+              <Star className="w-4 h-4 text-black fill-black" />
+              <span className="text-xs font-display font-black text-black tracking-tight uppercase">The Future of Web3 Gaming</span>
+            </div>
+
+            <h1 className="text-6xl md:text-8xl font-display font-black leading-[0.9] mb-8 uppercase italic tracking-tighter">
+              Bolder. <span className="text-brand-lime">Faster.</span> <br />
+              <span className="text-brand-coral">Better.</span>
             </h1>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 relative bg-gradient-to-r from-purple-400 via-pink-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-            🎮 Game Hub Monad 🎮
-          </h1>
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Star className="w-6 h-6 text-yellow-400 animate-spin" style={{ animationDuration: '3s' }} />
-            <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-              Play, Earn Rewards, Have Fun!
+
+            <p className="text-lg md:text-xl font-body font-bold text-gray-400 mb-10 max-w-2xl leading-relaxed">
+              Experience <span className="text-white">GASLESS</span> gaming on Monad Testnet. AI-powered strategies, lightning-fast gameplay, and massive rewards. Zero generic vibes.
             </p>
-            <Star className="w-6 h-6 text-yellow-400 animate-spin" style={{ animationDuration: '3s' }} />
-          </div>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Experience the future of blockchain gaming with AI-powered tips, multiple game modes, and crypto rewards!
-          </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-            <Link href="/game">
-              <Button size="lg" className="px-10 py-7 text-xl bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 hover:from-purple-500 hover:via-blue-500 hover:to-purple-500 text-white shadow-2xl ring-4 ring-purple-400/50 transform hover:scale-105 transition-all">
-                <Gamepad2 className="mr-3 h-6 w-6" />
-                Play Now
-              </Button>
-            </Link>
-            <Link href="/leaderboard">
-              <Button size="lg" variant="outline" className="px-10 py-7 text-xl border-2 border-purple-500/50 hover:bg-purple-900/30 hover:border-purple-400 text-white backdrop-blur-sm transform hover:scale-105 transition-all">
-                <Trophy className="mr-3 h-6 w-6" />
-                Leaderboard
-              </Button>
-            </Link>
+            <div className="flex flex-wrap gap-6">
+              <Link href="/game">
+                <button className="px-10 py-5 bg-brand-lime text-black font-display font-black text-xl neo-brutalism uppercase hover:bg-white hover:text-black hover:-translate-y-1 hover:-translate-x-1 transition-all flex items-center gap-3">
+                  <Gamepad2 className="w-6 h-6" />
+                  Play Now
+                  <ArrowRight className="w-6 h-6" />
+                </button>
+              </Link>
+              <Link href="/leaderboard">
+                <button className="px-10 py-5 bg-brand-skyblue text-black font-display font-black text-xl neo-brutalism uppercase hover:bg-white hover:text-black hover:-translate-y-1 hover:-translate-x-1 transition-all">
+                  Scoreboard
+                </button>
+              </Link>
+            </div>
           </div>
 
-          {/* AI Badge */}
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <Bot className="w-5 h-5 text-cyan-400 animate-pulse" />
-            <span className="text-cyan-300 font-semibold">Powered by AI Gaming Assistant</span>
+          <div className="flex-1 relative">
+            <div className="relative z-10 p-4 bg-brand-purple neo-brutalism rotate-[3deg] hover:rotate-0 transition-transform duration-500">
+              <div className="relative aspect-video bg-black overflow-hidden flex items-center justify-center border-4 border-black">
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/40 to-brand-coral/40 animate-pulse"></div>
+                <Gamepad2 className="w-32 h-32 text-white animate-bounce" />
+                <div className="absolute bottom-4 left-4 right-4 h-4 bg-brand-lime neo-brutalism-sm"></div>
+              </div>
+            </div>
+            {/* Decorative background boxes */}
+            <div className="absolute top-10 right-10 w-full h-full border-4 border-brand-coral neo-brutalism -z-10 bg-transparent rotate-[-2deg]"></div>
+            <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-brand-yellow neo-brutalism rotate-[15deg] -z-10"></div>
           </div>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mt-16">
+        {/* Features Row - High Contrast Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-24">
           {[
             {
-              title: "Multiple Modes",
-              description: "Play Classic, Time Attack, or Survival modes with unique challenges. Earn rewards in classic mode!",
-              icon: <Zap className="w-10 h-10 text-purple-400 mb-4 animate-pulse" />,
-              gradient: "from-purple-600/20 to-blue-600/20",
-              border: "border-purple-500/40"
+              title: "AI AGENT",
+              desc: "Pro-level strategies and real-time tips to dominate every leaderboard.",
+              icon: <Bot className="w-10 h-10" />,
+              color: "bg-brand-lime",
+              rotation: "rotate-[-1deg]"
             },
             {
-              title: "AI-Powered Tips",
-              description: "Get real-time AI assistance and strategies to improve your gameplay and maximize your scores!",
-              icon: <Bot className="w-10 h-10 text-cyan-400 mb-4 animate-pulse" />,
-              gradient: "from-cyan-600/20 to-purple-600/20",
-              border: "border-cyan-500/40"
+              title: "GASLESS",
+              desc: "Zero transaction fees. Play instantly on Monad Testnet with our gasless relayer.",
+              icon: <Zap className="w-10 h-10" />,
+              color: "bg-brand-skyblue",
+              rotation: "rotate-[1deg]"
             },
             {
-              title: "Crypto Rewards",
-              description: "Earn MON tokens for your achievements! 100 points = 1 MON. Compete globally and climb rankings!",
-              icon: <Coins className="w-10 h-10 text-yellow-400 mb-4 animate-pulse" />,
-              gradient: "from-yellow-600/20 to-orange-600/20",
-              border: "border-yellow-500/40"
+              title: "REWARDS",
+              desc: "Earn MON tokens for your skills. 100 points = 1 MON. Paid out instantly.",
+              icon: <Coins className="w-10 h-10" />,
+              color: "bg-brand-coral",
+              rotation: "rotate-[-2deg]"
             }
-          ].map((feature, index) => (
-            <div key={index} className={`bg-gradient-to-br ${feature.gradient} backdrop-blur-md p-8 rounded-2xl border-2 ${feature.border} shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all relative overflow-hidden`}>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-blue-600/10 to-pink-600/10 animate-pulse"></div>
-              <div className="relative z-10">
-                <div className="flex justify-center mb-4">
-                  {feature.icon}
-                </div>
-                <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{feature.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{feature.description}</p>
+          ].map((feat, i) => (
+            <div key={i} className={cn("p-8 neo-brutalism", feat.color, feat.rotation)}>
+              <div className="p-3 bg-black inline-block mb-6 neo-brutalism-sm">
+                <div className="text-white">{feat.icon}</div>
               </div>
+              <h3 className="text-3xl font-display font-black text-black mb-4 uppercase">{feat.title}</h3>
+              <p className="font-body font-bold text-black/80 text-lg leading-tight uppercase tracking-tight">
+                {feat.desc}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Quick Stats */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { label: "Games", value: "3+", icon: <Gamepad2 className="w-6 h-6 text-purple-400" /> },
-            { label: "Modes", value: "5+", icon: <Sparkles className="w-6 h-6 text-cyan-400" /> },
-            { label: "Rewards", value: "100%", icon: <Coins className="w-6 h-6 text-yellow-400" /> },
-            { label: "AI Tips", value: "Live", icon: <Bot className="w-6 h-6 text-pink-400" /> }
-          ].map((stat, index) => (
-            <div key={index} className="bg-gray-900/60 backdrop-blur-md p-6 rounded-xl border border-purple-500/30 text-center hover:border-purple-400/60 transition-all">
-              <div className="flex justify-center mb-2">{stat.icon}</div>
-              <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-1">
-                {stat.value}
-              </div>
-              <div className="text-sm text-gray-400">{stat.label}</div>
-            </div>
-          ))}
+        {/* CTA Section */}
+        <div className="p-12 bg-brand-yellow neo-brutalism text-center relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-black group-hover:h-full transition-all duration-300 -z-10 group-hover:opacity-10"></div>
+          <h2 className="text-5xl md:text-7xl font-display font-black text-black mb-8 uppercase italic tracking-tighter italic">
+            Ready to <span className="underline decoration-8 decoration-black">Win?</span>
+          </h2>
+          <div className="flex justify-center flex-wrap gap-6">
+            <Link href="/ai-chat">
+              <button className="px-8 py-4 bg-black text-white font-display font-black text-lg neo-brutalism-sm uppercase hover:bg-brand-lime hover:text-black transition-colors">
+                Chat with AI
+              </button>
+            </Link>
+            <Link href="/profile">
+              <button className="px-8 py-4 bg-white text-black border-4 border-black font-display font-black text-lg neo-brutalism-sm uppercase hover:bg-brand-coral transition-colors">
+                View Profile
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px) translateX(0px);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translateY(-20px) translateX(10px);
-            opacity: 0.6;
-          }
-        }
-        @keyframes gradient {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-        .animate-gradient {
-          animation: gradient 3s ease infinite;
-        }
-      `}</style>
     </div>
   );
+}
+
+function cn(...inputs: any[]) {
+  return inputs.filter(Boolean).join(" ");
 }

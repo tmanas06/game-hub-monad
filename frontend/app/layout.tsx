@@ -1,10 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Syne, Nunito } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/providers'
 import MainNavbar from '@/components/MainNavbar'
 
-const inter = Inter({ subsets: ['latin'] })
+const syne = Syne({
+  subsets: ['latin'],
+  variable: '--font-syne',
+  weight: ['700', '800'],
+})
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  variable: '--font-nunito',
+  weight: ['400', '600', '700'],
+})
 
 export const metadata: Metadata = {
   title: 'Game Hub Monad',
@@ -31,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark h-full">
-      <body className={`${inter.className} min-h-screen bg-gray-900 text-white overflow-auto`}>
+      <body className={`${syne.variable} ${nunito.variable} font-body min-h-screen bg-black text-white selection:bg-lime-400 selection:text-black`}>
         <Providers>
           <MainNavbar />
           <main className="pt-16 pb-16 md:pb-0 min-h-[calc(100vh-4rem)] overflow-auto">
