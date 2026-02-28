@@ -1,0 +1,39 @@
+{
+  "name": "gasless-arcade-backend",
+  "version": "1.0.0",
+  "description": "Gasless Arcade Backend - Monad x402 Paywall",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "ts-node index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prestart": "npm run build"
+  },
+  "keywords": [
+    "monad",
+    "x402",
+    "gasless",
+    "game"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/node": "^3.0.0",
+    "axios": "^1.6.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.10.0",
+    "express": "^4.18.2",
+    "groq-sdk": "^0.3.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@types/uuid": "^9.0.7",
+    "concurrently": "^9.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
