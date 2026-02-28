@@ -208,6 +208,16 @@ export default function MonadGamingDApp() {
   }, [cleanupIntervals])
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['ARROWUP', 'ARROWDOWN', 'ARROWLEFT', 'ARROWRIGHT'].includes(e.key.toUpperCase())) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
     if (!gameState.isPlaying || gameState.isPaused) return
     gameLoopRef.current = setInterval(() => {
       setGameState(prev => ({

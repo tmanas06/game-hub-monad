@@ -146,13 +146,18 @@ export default function SnakeGame() {
       if (!isPlaying || gameOver) return;
 
       const key = e.key.toUpperCase();
+      const controlKeys = ['W', 'A', 'S', 'D', 'ARROWUP', 'ARROWDOWN', 'ARROWLEFT', 'ARROWRIGHT', ' '];
+
+      if (controlKeys.includes(key)) {
+        e.preventDefault();
+      }
+
       if ((key === 'W' || key === 'ARROWUP') && directionRef.current !== 'DOWN') nextDirectionRef.current = 'UP';
       if ((key === 'S' || key === 'ARROWDOWN') && directionRef.current !== 'UP') nextDirectionRef.current = 'DOWN';
       if ((key === 'A' || key === 'ARROWLEFT') && directionRef.current !== 'RIGHT') nextDirectionRef.current = 'LEFT';
       if ((key === 'D' || key === 'ARROWRIGHT') && directionRef.current !== 'LEFT') nextDirectionRef.current = 'RIGHT';
 
       if (e.key === ' ') {
-        e.preventDefault();
         setIsPlaying(prev => !prev);
       }
     };

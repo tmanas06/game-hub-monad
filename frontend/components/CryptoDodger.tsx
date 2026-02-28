@@ -62,7 +62,7 @@ const CryptoDodger = () => {
   const lastObjectTimeRef = useRef<number>(0)
 
   useEffect(() => {
-    gameIdRef.current = crypto.randomUUID()
+    gameIdRef.current = uuidv4()
     const cachedKey = loadKey();
     if (cachedKey) {
       const signer = getSigner();
@@ -126,6 +126,24 @@ const CryptoDodger = () => {
     if (gameState.isPlaying && !gameState.isPaused) gameLoop()
     return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current) }
   }, [gameState.isPlaying, gameState.isPaused, gameLoop])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!gameState.isPlaying || gameState.isPaused) return;
+
+      const key = e.key.toUpperCase();
+      const movementKeys = ['A', 'D', 'ARROWLEFT', 'ARROWRIGHT'];
+
+      if (movementKeys.includes(key)) {
+        e.preventDefault();
+        if (key === 'A' || key === 'ARROWLEFT') setPlayerX(prev => Math.max(0, prev - moveStep));
+        if (key === 'D' || key === 'ARROWRIGHT') setPlayerX(prev => Math.min(gameWidth - playerSize, prev + moveStep));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [gameState.isPlaying, gameState.isPaused, gameWidth, playerSize, moveStep]);
 
   const startGame = useCallback(() => {
     setGameState({ score: 0, lives: 3, isPlaying: true, isPaused: false, hasStarted: true, objects: [], freezeActive: false, gameOver: false, gameWon: false, level: 1 })

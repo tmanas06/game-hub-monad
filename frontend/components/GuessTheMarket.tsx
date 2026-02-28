@@ -118,6 +118,24 @@ export default function GuessTheMarket() {
     } catch (err) { setError(err instanceof Error ? err.message : 'Error'); setIsGuessing(false); }
   }
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedCrypto || isGuessing || result || !userAddress) return;
+
+      const key = e.key.toUpperCase();
+      const guessKeys = ['W', 'S', 'ARROWUP', 'ARROWDOWN'];
+
+      if (guessKeys.includes(key)) {
+        e.preventDefault();
+        if (key === 'W' || key === 'ARROWUP') handleSubmitGuess('up');
+        if (key === 'S' || key === 'ARROWDOWN') handleSubmitGuess('down');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedCrypto, isGuessing, result, userAddress, currentPrice]);
+
   if (isLoading) return <div className="flex items-center justify-center p-20"><Loader2 className="w-12 h-12 animate-spin text-brand-lime" /></div>
 
   return (
