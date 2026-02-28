@@ -1,23 +1,108 @@
 'use client';
 
-import { Trophy, Star, Target, TrendingUp, Award, Crown } from 'lucide-react';
-import { Coins } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
+import { formatEther } from 'viem';
+import { publicClient } from '@/lib/viem';
+import { Trophy, Star, Target, TrendingUp, Award, Crown, Coins, Copy, Check } from 'lucide-react';
 
 export default function ProfilePage() {
+  const { user, authenticated, ready } = usePrivy();
+  const [balance, setBalance] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const address = user?.wallet?.address;
+  const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'NOT CONNECTED';
+
+  useEffect(() => {
+    if (!authenticated || !address) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const wei = await publicClient.getBalance({
+          address: address as `0x${string}`,
+        });
+        if (!cancelled) setBalance(formatEther(wei));
+      } catch (err) {
+        console.error('Balance fetch failed:', err);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [authenticated, address]);
+
+  const copyAddress = async () => {
+    if (!address) return;
+    await navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const [gameStats, setGameStats] = useState<any>(null);
+  const [marketStats, setMarketStats] = useState<any>(null);
+
+  const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+
+  useEffect(() => {
+    if (!authenticated || !address) return;
+
+    const fetchStats = async () => {
+      try {
+        const [gResp, mResp] = await Promise.all([
+          fetch(`${API_URL}/api/stats/${address}`),
+          fetch(`${API_URL}/api/market/stats/${address}`)
+        ]);
+
+        if (gResp.ok) setGameStats(await gResp.json());
+        if (mResp.ok) {
+          const mData = await mResp.json();
+          setMarketStats(mData.stats);
+        }
+      } catch (err) {
+        console.error('Stats fetch failed:', err);
+      }
+    };
+
+    fetchStats();
+  }, [authenticated, address, API_URL]);
+
   const stats = [
-    { label: "Games Played", value: "24", icon: <Target className="w-6 h-6" />, color: "bg-brand-lime" },
-    { label: "High Score", value: "1,250", icon: <TrendingUp className="w-6 h-6" />, color: "bg-brand-coral" },
-    { label: "Current Rank", value: "#42", icon: <Trophy className="w-6 h-6" />, color: "bg-brand-skyblue" },
-    { label: "Total Points", value: "8,760", icon: <Star className="w-6 h-6" />, color: "bg-brand-yellow" }
+    {
+      label: "Games Played",
+      value: gameStats?.gamesPlayed || "0",
+      icon: <Target className="w-6 h-6" />,
+      color: "bg-brand-lime"
+    },
+    {
+      label: "Best Score",
+      value: gameStats?.bestScore || "0",
+      icon: <TrendingUp className="w-6 h-6" />,
+      color: "bg-brand-coral"
+    },
+    {
+      label: "Market Guesses",
+      value: marketStats?.totalGuesses || "0",
+      icon: <Trophy className="w-6 h-6" />,
+      color: "bg-brand-skyblue"
+    },
+    {
+      label: "Win Rate",
+      value: marketStats?.totalGuesses > 0
+        ? `${Math.round((marketStats.correctGuesses / marketStats.totalGuesses) * 100)}%`
+        : "0%",
+      icon: <Star className="w-6 h-6" />,
+      color: "bg-brand-yellow"
+    }
   ];
 
   const achievements = [
-    { name: "Bubble Popper", icon: "🎯", unlocked: true, description: "Pop 100 bubbles" },
-    { name: "Time Master", icon: "⏱️", unlocked: true, description: "Complete time attack mode" },
-    { name: "Survivor", icon: "🛡️", unlocked: true, description: "Survive 5 minutes" },
-    { name: "Combo King", icon: "🔥", unlocked: false, description: "Get 10x combo" },
-    { name: "Crypto Collector", icon: "💰", unlocked: false, description: "Earn 10 MON" },
-    { name: "Legendary", icon: "👑", unlocked: false, description: "Reach top 10" }
+    { name: "Bubble Popper", icon: "🎯", unlocked: (gameStats?.totalScore || 0) >= 1000, description: "Earn 1000 total points" },
+    { name: "Time Master", icon: "⏱️", unlocked: (gameStats?.gamesPlayed || 0) >= 10, description: "Play 10 sessions" },
+    { name: "Predictor", icon: "🔮", unlocked: (marketStats?.correctGuesses || 0) >= 5, description: "5 correct market guesses" },
+    { name: "Combo King", icon: "🔥", unlocked: (gameStats?.bestScore || 0) >= 500, description: "Get score over 500" },
+    { name: "Early Adopter", icon: "💎", unlocked: true, description: "Monad Testnet pioneer" },
+    { name: "Whale in Training", icon: "🐋", unlocked: (marketStats?.totalGuesses || 0) >= 20, description: "Make 20 market predictions" }
   ];
 
   return (
@@ -35,7 +120,7 @@ export default function ProfilePage() {
             {/* Avatar Section */}
             <div className="relative group-hover:rotate-6 transition-transform">
               <div className="w-36 h-36 bg-black flex items-center justify-center text-6xl font-display font-black neo-brutalism text-brand-lime uppercase">
-                U
+                {user?.email?.address?.[0] || user?.wallet?.address?.[2] || 'U'}
               </div>
               <div className="absolute -bottom-2 -right-2 bg-brand-lime w-8 h-8 rounded-none border-4 border-black neo-brutalism-sm"></div>
             </div>
@@ -43,14 +128,23 @@ export default function ProfilePage() {
             {/* Profile Info */}
             <div className="flex-1 text-center md:text-left">
               <h1 className="text-5xl md:text-7xl font-display font-black mb-2 uppercase italic tracking-tighter italic">
-                PLAYER <span className="text-white bg-black px-4 neo-brutalism-sm">ONE</span>
+                PLAYER <span className="text-white bg-black px-4 neo-brutalism-sm">{authenticated ? 'ACTIVE' : 'READY'}</span>
               </h1>
-              <p className="text-2xl font-display font-black text-black/70 mb-6 uppercase tracking-tight">@username</p>
+              <button
+                onClick={copyAddress}
+                className="group flex items-center gap-2 mx-auto md:mx-0 text-2xl font-display font-black text-black/70 mb-6 uppercase tracking-tight hover:text-black transition-colors"
+                title="Copy Address"
+              >
+                {shortAddress}
+                {copied ? <Check className="w-5 h-5 text-black" /> : <Copy className="w-5 h-5 text-black opacity-40 group-hover:opacity-100" />}
+              </button>
 
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-brand-yellow neo-brutalism-sm text-black">
                 <Coins className="w-6 h-6" />
                 <span className="font-display font-black text-lg uppercase">
-                  Balance: <span className="underline decoration-4">2.5 MON</span>
+                  Balance: <span className="underline decoration-4">
+                    {balance !== null ? `${Number(balance).toFixed(4)} MON` : 'SYNCING...'}
+                  </span>
                 </span>
               </div>
             </div>
