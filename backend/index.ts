@@ -9,6 +9,7 @@ import { AIChatService } from "./src/services/aiChatService";
 import { MarketService } from "./src/services/marketService";
 import { createLeaderboardService } from "./src/services/leaderboardService";
 import { AgentDashboardService } from "./src/services/agentDashboardService";
+import { AutoPayAgent } from "./src/services/agentService";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ const agentDashboardService = new AgentDashboardService();
 let rewardService: RewardService;
 let leaderboardService: ReturnType<typeof createLeaderboardService>;
 let aiChatService: AIChatService;
+let autoPayAgent: AutoPayAgent | null = null;
 
 // Initialize services
 try {
@@ -46,6 +48,14 @@ try {
 } catch (error) {
   console.error("Failed to initialize reward service:", error);
   console.error("Make sure REWARD_WALLET_PRIVATE_KEY is set in .env");
+}
+
+// Initialize agent
+try {
+  autoPayAgent = new AutoPayAgent();
+  autoPayAgent.initialize().catch(err => console.error("Agent init error:", err));
+} catch (error) {
+  console.error("Failed to initialize auto-pay agent:", error);
 }
 
 // Health check
@@ -468,9 +478,22 @@ app.get("/api/market/leaderboard", async (req: Request, res: Response) => {
 // Export app for Vercel serverless functions
 export default app;
 
+// Agent status endpoint
+app.get("/api/agent/status", (req: Request, res: Response) => {
+  if (autoPayAgent) {
+    res.json({ success: true, agent: autoPayAgent.getStatus() });
+  } else {
+    res.json({ success: false, error: "Agent not initialized" });
+  }
+});
+
 // For local development, start the server
 if (require.main === module) {
   app.listen(port, () => {
-    console.log(`Gasless Arcade backend running on http://localhost:${port}`);
+    console.log(`Game Hub Monad backend running on http://localhost:${port}`);
+    // Start the integrated agent
+    if (autoPayAgent) {
+      autoPayAgent.start().catch(err => console.error("Agent start error:", err));
+    }
   });
 }

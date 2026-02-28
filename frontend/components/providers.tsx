@@ -51,6 +51,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                         createOnLogin: 'users-without-wallets',
                     },
                 },
+                loginMethods: ['email', 'wallet'],
             }}
         >
             {children}

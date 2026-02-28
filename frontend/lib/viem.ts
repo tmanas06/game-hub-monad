@@ -194,6 +194,9 @@ export const monadTestnet = defineChain({
   rpcUrls: {
     default: {
       http: ["https://testnet-rpc.monad.xyz"]
+    },
+    public: {
+      http: ["https://testnet-rpc.monad.xyz"]
     }
   },
   blockExplorers: {
@@ -202,6 +205,7 @@ export const monadTestnet = defineChain({
       url: "https://testnet.monadvision.com",
     },
   },
+  testnet: true,
 });
 
 export const publicClient = createPublicClient({

@@ -1,0 +1,28 @@
+{
+  "currency": "USDC",
+  "dailyLimit": 0.1,
+  "balance": 0.25,
+  "payments": [
+    {
+      "game": "SnakeGame",
+      "amount": 0.01,
+      "currency": "USDC",
+      "status": "success",
+      "timestamp": 1772274138320
+    },
+    {
+      "game": "CryptoDodger",
+      "amount": 0.01,
+      "currency": "USDC",
+      "status": "success",
+      "timestamp": 1772274158320
+    },
+    {
+      "game": "GuessTheMarket",
+      "amount": 0.01,
+      "currency": "USDC",
+      "status": "success",
+      "timestamp": 1772274178320
+    }
+  ]
+}

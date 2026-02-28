@@ -32,7 +32,9 @@ export default function WalletConnector() {
   const [balance, setBalance] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const address = signer?.account.address;
+  // Prioritize the user's Privy/MetaMask address for display, fall back to ephemeral signer
+  const address = user?.wallet?.address || signer?.account.address;
+  const showEphemeralWarning = authenticated && user?.wallet?.address && signer && user.wallet.address !== signer.account.address;
   const shortAddress =
     address ? `${address.slice(0, 6)}…${address.slice(-4)}` : "";
 
